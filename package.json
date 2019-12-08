@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/kubemq-io/kubemq-nodeRest.git"
+    "url": "git+https://github.com/kubemq-io/kubemq-rest-nodejs.git"
   },
   "keywords": [
     "Messaging"
@@ -16,9 +16,9 @@
   "author": "Ido Sheffer",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/kubemq-io/kubemq-nodeRest/issues"
+    "url": "https://github.com/kubemq-io/kubemq-rest-nodejs/issues"
   },
-  "homepage": "https://github.com/kubemq-io/kubemq-nodeRest#readme",
+  "homepage": "https://github.com/kubemq-io/kubemq-rest-nodejs#readme",
   "dependencies": {
     "ws": "^7.2.0"
   }
