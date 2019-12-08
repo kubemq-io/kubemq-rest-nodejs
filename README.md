@@ -17,7 +17,7 @@ The SDK implements all communication patterns available through the KubeMQ serve
 ### Installing
 
 The recommended way to use the SDK for Nodejs in your project is to consume it from NPM
-https://www.npmjs.com/package/kubemq-nodejs
+https://www.npmjs.com/package/kubemq-restnodejs
 
 
 
