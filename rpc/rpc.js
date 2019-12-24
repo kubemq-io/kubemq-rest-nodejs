@@ -117,7 +117,7 @@ constructor(kubeMQHost, kubeMQRestPort, client, channelName, type, defaultTimeou
          ws = new stream(url, options);
         ws.openStream();
         ws.on('message', function incoming(data) {
-            responder(JSON.parse(data));
+            responder(data);
         });
         return new Promise((resolve, reject) => {
             ws.on('open', function open() {

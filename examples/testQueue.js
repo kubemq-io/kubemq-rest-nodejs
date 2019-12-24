@@ -1,12 +1,14 @@
-const MessageQueue = require('../queue/queue');
-const msgQueue = require('../queue/message');
-const byteConverter = require('../tools/stringToByte').stringToByte;
+// const MessageQueue = require('../queue/queue');
+// const msgQueue = require('../queue/message');
+// const byteConverter = require('../tools/stringToByte').stringToByte;
 
-let message_queue = new MessageQueue('localhost', '9090', 'client', 'testQueue', undefined, 10, 10000);
+const kubeMQ = require('..')
+
+let message_queue = new kubeMQ.Queue('localhost', '9090', 'client', 'testQueue', undefined, 10, 10000);
 
 let messages = [
-    new msgQueue('meta', byteConverter('ms1')),
-    new msgQueue('meta2', byteConverter('body2'))
+    new kubeMQ.QueueMessage('meta', kubeMQ.stringToByte('ms1')),
+    new kubeMQ.QueueMessage('meta2', kubeMQ.stringToByte('body2'))
 ];
 
 //1. purge the queue
@@ -20,7 +22,7 @@ message_queue.ackAllMessages().then(ackAllResponse => {
             console.log(`received total of ${receivedMessages.MessagesReceived}, will peek to see queue status`);
             //4. peek queue status
             message_queue.peek(10, 1).then(peekResult => {
-                console.log(`peek result returned :${peekResult.MessagesReceived} messages out of ${messagesRemaining} that was left`);
+                console.log(`peek result returned :${peekResult} messages left`);
             })
         })
     })

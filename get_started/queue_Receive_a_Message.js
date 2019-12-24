@@ -20,13 +20,13 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. */
 
-const Queue = require('../queue/queue');
-const byteToString = require('../tools/stringToByte').byteToString;
+
+const kubeMQ = require('..')
 
 let kubeMQHost = 'localhost', kubeMQRestPort = '9090',
     queueName = 'hello-world-queue', clientID = 'test-queue-client-id2';
 
-let queue = new Queue(kubeMQHost, kubeMQRestPort, clientID, queueName);
+let queue = new kubeMQ.Queue(kubeMQHost, kubeMQRestPort, clientID, queueName);
 
 queue.receive(2, 1).then(res => {
     if (res.is_error) {
@@ -36,7 +36,7 @@ queue.receive(2, 1).then(res => {
             console.log('Received: ' + res.data.MessagesReceived);
             res.data.Messages.forEach(element => {
 
-                console.log('MessageID:' + element.MessageID + ', Body:' + byteToString(element.Body));
+                console.log('MessageID:' + element.MessageID + ', Body:' + kubeMQ.byteToString(element.Body));
             });
         } else {
             console.log('No messages');

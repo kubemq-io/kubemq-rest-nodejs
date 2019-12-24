@@ -20,17 +20,16 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. */
 
-const Queue = require('../queue/queue');
-const Message = require('../queue/message')
-const byteConverter = require('../tools/stringToByte').stringToByte;
+
+const kubeMQ = require('..')
 
 let kubeMQHost = 'localhost', kubeMQRestPort = '9090'
 queueName = 'hello-world-queue', clientID = 'test-queue-client-id2';
 
-let queue = new Queue(kubeMQHost, kubeMQRestPort, clientID, queueName);
+let queue = new kubeMQ.Queue(kubeMQHost, kubeMQRestPort, clientID, queueName);
 
 queue.send(
-    new Message(byteConverter('some-simple_queue-queue-message')))
+    new kubeMQ.QueueMessage(kubeMQ.ByteConverter('some-simple_queue-queue-message')))
     .then(sent => {
         if (sent.is_error) {
             console.log('message enqueue error, error:' + err);

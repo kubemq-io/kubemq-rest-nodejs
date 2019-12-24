@@ -1,10 +1,11 @@
-
 const kubeMQ = require('..')
+
 
 let kubeMQHost = 'localhost', kubeMQRestPort = '9090',
     clientID = 'c1', queueName = 'testQueue';
-let transactionQueue = new kubeMQ.QueueTransaction(kubeMQHost, kubeMQRestPort, clientID, queueName);
 
+    let transactionQueue= new kubeMQ.QueueTransaction(kubeMQHost, kubeMQRestPort, clientID, queueName);
+ 
 transactionQueue.receiveMessage(5, 10);
 
 
@@ -30,28 +31,12 @@ transactionQueue.on('message', msg => {
     console.log('error' + msg);
     return;
   }
-  // transaction.extendVisibility(40);
-  if (workOnMSG(msg)) {
-    transactionQueue.ackMessage();
-  } else {
-    transactionQueue.rejectedMessage();
-  };
+ 
+  let modMessage =msg.Message;
+  modMessage.Metadata =modMessage.Metadata +' mod';
+
+
+  
+  transactionQueue.modify(modMessage);
 });
-
-
-
-
-let counter = 1;
-function workOnMSG(msg) {
-
-  if (msg.Message.Attributes.Sequence !== 220) {
-    console.log('worked on msg' + counter++);
-    return true;
-  }
-  else {
-    return false;
-  }
-
-};
-
-
+   

@@ -1,10 +1,10 @@
-const Transaction = require('../queue/transaction');
+const kubeMQ = require('..')
 
 
 let kubeMQHost = 'localhost', kubeMQRestPort = '9090',
     clientID = 'c1', queueName = 'testQueue';
 
-    let transactionQueue= new Transaction(kubeMQHost, kubeMQRestPort, clientID, queueName);
+    let transactionQueue= new kubeMQ.QueueTransaction(kubeMQHost, kubeMQRestPort, clientID, queueName);
  
 transactionQueue.receiveMessage(5, 10);
 
@@ -32,13 +32,6 @@ transactionQueue.on('message', msg => {
     return;
   }
  
-  transaction.resend('newQueue').then(_=> {
-    console.log(`sent extendVisibilityRequest`);
-  });
-  if (msg.Message.Attributes.Sequence !== 220) {
-    transactionQueue.ackMessage();
-  } else {
-    transactionQueue.rejectedMessage();
-  };
+  transactionQueue.resend('newQueue');
 });
    

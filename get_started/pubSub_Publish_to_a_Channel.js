@@ -22,15 +22,14 @@ SOFTWARE. */
 
 
 
-const Publisher = require('../pubSub/events/publisher');
-const stringToByte = require('../tools/stringToByte').stringToByte;
+const kubeMQ = require('..')
 
 let kubeMQHost = 'localhost', kubeMQRestPort = '9090',
     channelName = 'testing_event_channel', clientID = 'pub';
     
-let publisher = new Publisher(kubeMQHost, kubeMQRestPort, clientID, channelName);
+let publisher = new kubeMQ.EventPublisher(kubeMQHost, kubeMQRestPort, clientID, channelName);
 
-let event = new Publisher.Event(stringToByte('hello kubemq - sending single event'));
+let event = new kubeMQ.Event(kubeMQ.stringToByte('hello kubemq - sending single event'));
 
 publisher.send(event).then(
     res => {

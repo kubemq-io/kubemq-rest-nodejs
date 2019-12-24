@@ -101,8 +101,7 @@ class transaction extends EventEmitter {
                     break;
 
                 case StreamRequestType.ModifyVisibility:
-                    self.emit('extended', msg)
-                    this.close();
+                    self.emit('extended', msg)                   
                     break;
                 case StreamRequestType.ResendMessage:
                     msg.by = 'ResendMessage';
@@ -232,7 +231,7 @@ class transaction extends EventEmitter {
         let StreamQueueMessageRequest = {
             RequestID: undefined,
             ClientID: this.client,
-            StreamRequestTypeData: StreamRequestType.ModifyVisibility,
+            StreamRequestTypeData: StreamRequestType.ResendMessage,
             Channel: queueName,
             VisibilitySeconds: undefined,
             WaitTimeSeconds: undefined,
@@ -257,10 +256,17 @@ class transaction extends EventEmitter {
             this.emit('error', { Error: 'no message in tran' });
             return;
         }
+       if(!message.Channel){
+        message.Channel=  this.queueName;
+       } 
+        if(!message.ClientID){
+            message.ClientID  = this.client;
+        } 
+
         let StreamQueueMessageRequest = {
             RequestID: undefined,
             ClientID: this.client,
-            StreamRequestTypeData: StreamRequestType.ModifyVisibility,
+            StreamRequestTypeData: StreamRequestType.SendModifiedMessage,
             Channel: this.queueName,
             VisibilitySeconds: undefined,
             WaitTimeSeconds: undefined,

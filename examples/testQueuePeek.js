@@ -1,9 +1,9 @@
-const MessageQueue = require('../queue/queue');
+const kubeMQ = require('..')
 
 let kubeMQHost = 'localhost', kubeMQRestPort = '9090',
     clientID = 'c1', queueName = 'testQueue';
 
-let queue = new MessageQueue(kubeMQHost, kubeMQRestPort, clientID, queueName);
+let queue = new kubeMQ.Queue(kubeMQHost, kubeMQRestPort, clientID, queueName);
 
 queue.peek().then(receivedMessages => {
     if (receivedMessages.data.Messages) {

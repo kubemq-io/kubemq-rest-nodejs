@@ -20,14 +20,15 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. */
 
-const CommandReceiver = require('../rpc/command/commandReceiver');
+
+const kubeMQ = require('..')
 
 let kubeMQHost = 'localhost', kubeMQRestPort = '9090',
     channelName = 'testing_Command_channel', clientID = 'hello-world-sender';
 
-let receiver = new CommandReceiver(kubeMQHost, kubeMQRestPort, clientID, channelName);
+let receiver = new kubeMQ.CommandReceiver(kubeMQHost, kubeMQRestPort, clientID, channelName);
 receiver.subscribe(cmd => {
-    let response = new CommandReceiver.Response(cmd, true);
+    let response = new kubeMQ.CommandResponse(cmd, true);
     response.Timestamp = Math.floor(new Date() / 1000);
     receiver.sendResponse(response).then(snd => {
         console.log('sent:' + snd);

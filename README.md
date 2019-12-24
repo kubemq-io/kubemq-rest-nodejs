@@ -85,9 +85,9 @@ KubeMQ supports distributed durable FIFO based queues with the following core fe
 let kubeMQHost = 'localhost', kubeMQRestPort = '9090',
   clientID = 'c1', queueName = 'testQueue';
 
-let queue = new MessageQueue(kubeMQHost, kubeMQRestPort, clientID,queueName);
+let queue = new kubeMQ.Queue(kubeMQHost, kubeMQRestPort, clientID, queueName);
 
-let msg = new Message(byteConverter('body'));
+let msg =  new kubeMQ.QueueMessage(kubeMQ.ByteConverter('some-simple_queue-queue-message')))
 
 queue.send(msg).then(sent => {
     console.log('sent message:' + sent);
@@ -104,9 +104,9 @@ queue.send(msg).then(sent => {
 let kubeMQHost = 'localhost', kubeMQRestPort = '9090',
   clientID = 'c1', queueName = 'testQueue';
 
-let queue = new MessageQueue(kubeMQHost, kubeMQRestPort, clientID,queueName);
+let queue = new kubeMQ.Queue(kubeMQHost, kubeMQRestPort, clientID,queueName);
 
-let msg = new Message(byteConverter('body'));
+let msg = new kubeMQ.QueueMessage(byteConverter('body'));
 msg.addExpiration(100);
 queue.send(msg).then(sent => {
     console.log('sent message:' + sent);
@@ -123,9 +123,9 @@ queue.send(msg).then(sent => {
 let kubeMQHost = 'localhost', kubeMQRestPort = '9090',
   clientID = 'c1', queueName = 'testQueue';
 
-let queue = new MessageQueue(kubeMQHost, kubeMQRestPort, clientID,queueName);
+let queue = new kubeMQ.Queue(kubeMQHost, kubeMQRestPort, clientID,queueName);
 
-let msg = new Message(byteConverter('body'));
+let msg = new kubeMQ.QueueMessage(byteConverter('body'));
 msg.addDelay(100);
 queue.send(msg).then(sent => {
     console.log('sent message:' + sent);
@@ -141,12 +141,11 @@ queue.send(msg).then(sent => {
  
 let kubeMQHost = 'localhost', kubeMQRestPort = '9090',
     clientID = 'c1', queueName = 'testQueue';
-let queue = new Queue(kubeMQHost,kubeMQRestPort, clientID, queueName, undefined, 100, 1);
+let queue = new kubeMQ.Queue(kubeMQHost,kubeMQRestPort, clientID, queueName, undefined, 100, 1);
 
 let messages = [];
 for (let index = 0; index < 10; index++) {
-   let msg = new Message(byteConverter('my buddy'));
- //  msg.addExpiration(1);
+   let msg = new kubeMQ.QueueMessage(kubeMQ.byteConverter('my buddy'));
    messages.push(msg);   
 };
 
@@ -167,7 +166,7 @@ queue.sendBatch(messages).then(res => {
 let kubeMQHost = 'localhost', kubeMQRestPort = '9090',
     clientID = 'c1', queueName = 'testQueue';
 
-let queueDequeue = new MessageQueue(kubeMQHost, kubeMQRestPort, clientID+'2',queueName);
+let queueDequeue = new kubeMQ.Queue(kubeMQHost, kubeMQRestPort, clientID+'2',queueName);
 
     queueDequeue.receive(10, 1).then(receivedMessages => {
         console.log('received message:' + JSON.stringify(receivedMessages));
@@ -183,7 +182,7 @@ let queueDequeue = new MessageQueue(kubeMQHost, kubeMQRestPort, clientID+'2',que
 let kubeMQHost = 'localhost', kubeMQRestPort = '9090',
     clientID = 'c1', queueName = 'testQueue';
     
-let queueDequeue = new MessageQueue(kubeMQHost, kubeMQRestPort, clientID+'2',queueName);
+let queueDequeue = new kubeMQ.Queue(kubeMQHost, kubeMQRestPort, clientID+'2',queueName);
 
     queueDequeue.peek(10, 1).then(receivedMessages => {
         console.log('received message:' + JSON.stringify(receivedMessages));
@@ -198,7 +197,7 @@ let queueDequeue = new MessageQueue(kubeMQHost, kubeMQRestPort, clientID+'2',que
 let kubeMQHost = 'localhost', kubeMQRestPort = '9090',
     clientID = 'c1', queueName = 'testQueue';
 
- let queue = new Queue(kubeMQHost, kubeMQRestPort, clientID, queueName);
+ let queue = new kubeMQ.Queue(kubeMQHost, kubeMQRestPort, clientID, queueName);
 queue.ackAllMessages().catch(err => {
     console.log(err)
 });
@@ -213,7 +212,7 @@ const Transaction = require('../queue/transaction');
 let kubeMQHost = 'localhost', kubeMQRestPort = '9090',
     clientID = 'c1', queueName = 'testQueue';
 
-let transactionQueue = new Transaction(kubeMQHost, kubeMQRestPort, clientID, queueName);
+let transactionQueue = new kubeMQ.QueueTransaction(kubeMQHost, kubeMQRestPort, clientID, queueName);
 
 transactionQueue.receiveMessage(2, 10);
 
@@ -258,7 +257,7 @@ const Transaction = require('../queue/transaction');
 let kubeMQHost = 'localhost', kubeMQRestPort = '9090',
     clientID = 'c1', queueName = 'testQueue';
 
-let transactionQueue = new Transaction(kubeMQHost, kubeMQRestPort, clientID, queueName);
+let transactionQueue = new kubeMQ.QueueTransaction(kubeMQHost, kubeMQRestPort, clientID, queueName);
 
 transactionQueue.receiveMessage(2, 10);
 
@@ -302,7 +301,7 @@ const Transaction = require('../queue/transaction');
 let kubeMQHost = 'localhost', kubeMQRestPort = '9090',
     clientID = 'c1', queueName = 'testQueue';
 
-let transactionQueue = new Transaction(kubeMQHost, kubeMQRestPort, clientID, queueName);
+let transactionQueue = new kubeMQ.QueueTransaction(kubeMQHost, kubeMQRestPort, clientID, queueName);
 
 transactionQueue.receiveMessage(100, 10);
 
@@ -335,13 +334,10 @@ transactionQueue.on('message', msg => {
 ### Transactional Queue - Resend Modified Message
 ```Nodejs
 
-const Transaction = require('../queue/transaction');
-const Message = require('../queue/message');
-
 let kubeMQHost = 'localhost', kubeMQRestPort = '9090',
     clientID = 'c1', queueName = 'testQueue';
 
-let transactionQueue = new Transaction(kubeMQHost, kubeMQRestPort, clientID, queueName);
+let transactionQueue = new kubeMQ.QueueTransaction(kubeMQHost, kubeMQRestPort, clientID, queueName);
 transactionQueue.receiveMessage(100, 10);
 
 transactionQueue.on('error', err => {
@@ -377,15 +373,12 @@ transactionQueue.on('message', msg => {
 #### Single event
 ```Nodejs
 
-const publisher = require('../pubSub/events/publisher');
-const stringToByte = require('../tools/stringToByte').stringToByte;
-
 let kubeMQHost = 'localhost', kubeMQRestPort = '9090',
     clientID = 'c1', channelName = 'pubsubnnel';
 
-let pub = new publisher(kubeMQHost, kubeMQRestPort, clientID, channelName);
+let pub = new kubeMQ.EventPublisher(kubeMQHost, kubeMQRestPort, clientID, channelName);
 
-let event = new publisher.Event(stringToByte('hello kubemq - sending single event'));
+let event = new kubeMQ.Event(stringToByte('hello kubemq - sending single event'));
 
 pub.send(event).then(
     res => {
@@ -400,13 +393,11 @@ pub.send(event).then(
 #### Stream Events
 ```Nodejs
 
-const Publisher = require('../pubSub/events/publisher');
-
 let kubeMQHost = 'localhost', kubeMQRestPort = '9090',
     clientID = 'c1', channelName = 'pubsubnnel';
 
-let publisher = new publisher(kubeMQHost, kubeMQRestPort, clientID, channelName);
-let event = new Publisher.Event(stringToByte('publish event test'));
+let publisher = new kubeMQ.EventPublisher(kubeMQHost, kubeMQRestPort, clientID, channelName);
+let event = new kubeMQ.Event(stringToByte('publish event test'));
 
 publisher.openStream();
 publisher.stream(event).then(
@@ -424,12 +415,10 @@ publisher.closeStream();
 
 ```Nodejs
 
-const Subscriber = require('../pubSub/events/subscriber');
-
 let kubeMQHost = 'localhost', kubeMQRestPort = '9090',
     clientID = 'c1', channelName = 'pubsubnnel';
 
-let sub = new Subscriber(kubeMQHost, kubeMQRestPort, clientID, channelName);
+let sub = new kubeMQ.EventSubscriber(kubeMQHost, kubeMQRestPort, clientID, channelName);
 
 sub.subscribeToEvents(msg => {
     console.log(msg);
@@ -462,13 +451,12 @@ KubeMQ supports 6 types of subscriptions:
 
 ```Nodejs
 
-const StorePublisher = require('../pubSub/eventsStore/storePublisher');
-
 let kubeMQHost = 'localhost', kubeMQRestPort = '9090',
     clientID = 'c1', channelName = 'StorePubSub';
-let storePublisher = new StorePublisher(kubeMQHost, kubeMQRestPort, clientID, channelName);
 
-let eventStore = new StorePublisher.Event(stringToByte('test'));
+let storePublisher = new kubeMQ.EventStorePublisher(kubeMQHost, kubeMQRestPort, clientID, channelName);
+
+let eventStore = new kubeMQ.Event(stringToByte('test'));
 
 storePublisher.send(eventStore).then(res => {
     console.log(res);
@@ -482,12 +470,10 @@ storePublisher.send(eventStore).then(res => {
 
 ```Nodejs
 
-const StoreSubscriber = require('../pubSub/eventsStore/storeSubscriber');
-
 let kubeMQHost = 'localhost', kubeMQRestPort = '9090',
     clientID = 'c2', channelName = 'StorePubSub';
 
-let storeSubscriber = new StoreSubscriber(kubeMQHost, kubeMQRestPort, clientID, channelName);
+let storeSubscriber = new kubeMQ.EventStoreSubscriber(kubeMQHost, kubeMQRestPort, clientID, channelName);
 
 storeSubscriber.subscribeToEvents(msg => {
     console.log('msg:' + msg.Metadata)
@@ -508,15 +494,13 @@ The response can be successful or not. This is the responsibility of the respond
 #### Receiving Commands Requests  
 ```Nodejs
 
-const CommandReceiver = require('../rpc/command/commandReceiver');
-
 let kubeMQHost = 'localhost', kubeMQRestPort = '9090',
     clientID = 'c1', channelName = 'cmd';
 
-let sender = new CommandSender(kubeMQHost, kubeMQRestPort, clientID, channelName, 1000);
+let receiver = new kubeMQ.CommandReceiver(kubeMQHost, kubeMQRestPort, clientID, channelName, 1000);
 
 receiver.subscribe(cmd => {
-    let response = new CommandReceiver.Response(cmd, true);
+    let response = new kubeMQ.CommandResponse(cmd, true);
     response.Timestamp = Math.floor(new Date() / 1000);
     receiver.sendResponse(response).then(snd => {
         console.log('sent:' + snd);
@@ -531,15 +515,12 @@ receiver.subscribe(cmd => {
 
 ```Nodejs
 
-const stringToByte = require('../tools/stringToByte').stringToByte;
-const CommandSender = require('../rpc/command/commandSender');
-
 let kubeMQHost = 'localhost', kubeMQRestPort = '9090',
     clientID = 'c1', channelName = 'cmd';
 
-let sender = new CommandSender(kubeMQHost, kubeMQRestPort, clientID, channelName, 1000);
+let sender = new kubeMQ.CommandSender(kubeMQHost, kubeMQRestPort, clientID, channelName, 1000);
 
-let request = new CommandSender.CommandRequest(stringToByte(' hello kubemq - sending a command, please reply'));
+let request = new kubeMQ.CommandRequest(kubeMQ.stringToByte(' hello kubemq - sending a command, please reply'));
 
 sender.send(request).then(
     res => {
@@ -566,18 +547,14 @@ The response must include metadata or body together with an indication of succes
 
 ```Nodejs
 
- const QueryReceiver = require('../rpc/query/queryReceiver');
-
-const stringToByte = require('../tools/stringToByte').stringToByte;
-
 let kubeMQHost = 'localhost', kubeMQRestPort = '9090',
     clientID = 'c1', channelName = 'qry';
     
-let query = new QueryReceiver(kubeMQHost, kubeMQRestPort, clientID, channelName);
+let query = new kubeMQ.QueryReceiver(kubeMQHost, kubeMQRestPort, clientID, channelName);
 
 query.subscribe(qry => {
     console.log(qry);
-    let response = new QueryReceiver.QueryResponse(qry, stringToByte('no books'));
+    let response = new kubeMQ.QueryResponse(qry, kubeMQ.stringToByte('no books'));
     response.Metadata = 'no books';
     query.sendResponse(response).then(snd => {
         console.log('sent:' + snd);
@@ -593,15 +570,12 @@ query.subscribe(qry => {
 
 ```Nodejs
 
-const QuerySender = require('../rpc/query/querySender');
-const stringToByte = require('../tools/stringToByte').stringToByte;
-
 let kubeMQHost = 'localhost', kubeMQRestPort = '9090',
     clientID = 'c1', channelName = 'qry';
 
-let qrySend = new QuerySender(kubeMQHost, kubeMQRestPort, clientID, channelName, 10000);
+let qrySend = new kubeMQ.QuerySender((kubeMQHost, kubeMQRestPort, clientID, channelName, 10000);
 
-let request = new QuerySender.QueryRequest(stringToByte('select books'));
+let request = new kubeMQ.QueryRequest(kubeMQ.stringToByte('select books'));
 
 querySender.send(request).then(res => {
      console.log('Query response: ' + JSON.stringify(res))

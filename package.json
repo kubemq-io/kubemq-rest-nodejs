@@ -1,8 +1,8 @@
 {
   "name": "kubemq-restnodejs",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "The KubeMQ SDK for Nodejs enables Nodejs developers to communicate with KubeMQ server.",
-  "main": "",
+  "main": "kubeMQ.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

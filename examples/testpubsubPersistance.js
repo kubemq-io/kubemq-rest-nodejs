@@ -1,6 +1,6 @@
 
 
-const stringToByte = require('../tools/stringToByte').stringToByte;
+const kubeMQ = require('..')
 /**
  * event pubsub
  */
@@ -13,10 +13,10 @@ let kubeMQHost = 'localhost', kubeMQRestPort = '9090',
 //  * persistance store pubsub.
 //  */
 
-const StorePublisher = require('../pubSub/eventsStore/storePublisher');
-let storePublisher = new StorePublisher(kubeMQHost, kubeMQRestPort, clientID+'1', channelName);
 
-let eventStore = new StorePublisher.Event(stringToByte('test '));
+let storePublisher = new kubeMQ.EventStorePublisher(kubeMQHost, kubeMQRestPort, clientID+'1', channelName);
+
+let eventStore = new kubeMQ.Event(kubeMQ.stringToByte('test '));
 eventStore.Metadata = 'test store';
 
 storePublisher.send(eventStore).then(res => {
@@ -25,8 +25,8 @@ storePublisher.send(eventStore).then(res => {
     console.log(err);
 });
 
-const StoreSubscriber = require('../pubSub/eventsStore/storeSubscriber');
-let storeSubscriber = new StoreSubscriber(kubeMQHost, kubeMQRestPort, clientID, channelName);
+
+let storeSubscriber = new kubeMQ.EventStoreSubscriber(kubeMQHost, kubeMQRestPort, clientID, channelName);
 
 storeSubscriber.subscribeToEvents(msg => {
     console.log('msg received:' + msg.Metadata)
@@ -34,4 +34,4 @@ storeSubscriber.subscribeToEvents(msg => {
     , err => {
         console.log('error:' + err)
     },
-    StoreSubscriber.EventStoreType.StartFromFirst, '1')
+    kubeMQ.EventStoreSubscriber.EventStoreType.StartFromFirst, '1')
