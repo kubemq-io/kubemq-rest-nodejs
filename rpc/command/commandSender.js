@@ -24,7 +24,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. */
 
 const rpc = require('../rpc');
-const CommandRequest = require('../lowLevel/commandRequest')
+const CommandRequest = require('../lowLevel/commandRequest');
 /**
  * Class representing a Command Sender.
  */
@@ -42,7 +42,7 @@ class CommandSender{
 
     constructor(kubeMQHost, kubeMQRestPort, client, channel, defaultTimeout,isSecure)
     {
-        this.rpc = new rpc(kubeMQHost, kubeMQRestPort, client, channel, rpc.Type.Command, defaultTimeout, undefined, isSecure)
+        this.rpc = new rpc(kubeMQHost, kubeMQRestPort, client, channel, rpc.Type.Command, defaultTimeout, undefined, isSecure);
     }
 
     /**

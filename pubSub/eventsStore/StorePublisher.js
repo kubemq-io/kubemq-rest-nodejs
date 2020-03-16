@@ -20,7 +20,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. */
 
-const PubSub = require('../pubSub')
+const PubSub = require('../pubSub');
 /** Class representing an event with persistent storage pattern publisher.*/
 class StorePublisher {
     /** Create an event persistent publisher.
@@ -36,7 +36,7 @@ class StorePublisher {
     }
 
     /**
-    * publish event.
+    * publish event to event store.
     *   @param {event} event - The data to publish.
     */
     send(event) {

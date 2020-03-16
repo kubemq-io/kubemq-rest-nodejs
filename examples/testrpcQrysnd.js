@@ -1,15 +1,17 @@
-const kubeMQ = require('..')
+const Converter = require('../tools/stringToByte');
+const QuerySender = require('../rpc/query/querySender');
+const QueryRequest = require('../rpc/lowLevel/queryRequest');
 
 let kubeMQHost = 'localhost', kubeMQRestPort = '9090',
     clientID = 'c1', channelName = 'qry';
 
-let qrySend = new kubeMQ.QuerySender(kubeMQHost, kubeMQRestPort, clientID, channelName, 10000);
+let qrySend = new QuerySender(kubeMQHost, kubeMQRestPort, clientID, channelName, 10000);
 
 
-let request = new kubeMQ.QueryRequest(kubeMQ.stringToByte('select books'));
+let request = new QueryRequest(Converter.stringToByte('select books'));
 
 qrySend.send(request).then(res => {
-     console.log('Query response: '+kubeMQ.byteToString(res.data.Body)) }
+     console.log('Query response: '+ Converter.byteToString(res.data.Body)) }
      ).catch(err=>{
-          console.log('error query: '+err);
+          console.log('error query: ' + err);
      });

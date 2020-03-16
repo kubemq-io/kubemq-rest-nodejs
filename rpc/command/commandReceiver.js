@@ -35,7 +35,7 @@ class CommandReceiver{
     */
     constructor(kubeMQHost, kubeMQRestPort, client, channel, group, isSecure)
     {
-        this.rpc = new rpc(kubeMQHost, kubeMQRestPort, client, channel, rpc.Type.Command,1000,group, isSecure)
+        this.rpc = new rpc(kubeMQHost, kubeMQRestPort, client, channel, rpc.Type.Command,1000,group, isSecure);
     }
 
      /**

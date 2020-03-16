@@ -21,7 +21,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. */
 
 const rpc = require('../rpc');
-const QueryRequest = require('../lowLevel/queryRequest')
+const QueryRequest = require('../lowLevel/queryRequest');
 
 //** Class representing a query request sender. */
 
@@ -36,11 +36,11 @@ class QuerySender {
     * @param {boolean} isSecure - Using TLS secure KubeMQ.
     */
     constructor(kubeMQHost, kubeMQRestPort, client, channelName, defaultTimeout,isSecure) {
-        this.rpc = new rpc(kubeMQHost, kubeMQRestPort, client, channelName, rpc.Type.Query, defaultTimeout,undefined, isSecure)
+        this.rpc = new rpc(kubeMQHost, kubeMQRestPort, client, channelName, rpc.Type.Query, defaultTimeout,undefined, isSecure);
     }
 
     /**
-    * publish event.
+    * publish Query.
     * @param {QueryRequest} request - The query request.
     */
     send(request) {

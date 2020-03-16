@@ -23,7 +23,6 @@ SOFTWARE. */
 
 const httpExec = require('../rest/httpExecuter');
 const Transaction = require('../queue/transaction');
-let options;
 
 /**
  * Class representing a queue pattern on Rest. 
@@ -40,6 +39,10 @@ class Queue {
     * @param {boolean} isSecure - Using TLS secure KubeMQ.
     */
     constructor(kubeMQHost, kubeMQRestPort, client, queueName,  group, maxReceive = 32, waitTime = 1, isSecure) {
+        if (kubeMQRestPort === undefined || kubeMQRestPort === null){
+            throw new Error('Please fill kubeMQRestPort');
+        }
+        
         this.kubeMQHost = kubeMQHost;
         this.kubeMQPort = isNaN(kubeMQRestPort) ? kubeMQPort.toString() : kubeMQRestPort;
         this.queueName = queueName;
@@ -49,7 +52,7 @@ class Queue {
         this.max_number_of_messages = maxReceive;
         this.wait_time_seconds_queue_messages = waitTime;
 
-        options = {
+        this.options = {
             'host': this.kubeMQHost,
             'port': this.kubeMQPort,
             "headers": { 'Content-Type': 'application/json' }
@@ -67,7 +70,7 @@ class Queue {
         if (!message.MessageID) {
             message.MessageID = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 5)
         }
-
+        let options = this.options;
         options.method = 'POST';
         options.path = '/queue/send';
 
@@ -86,7 +89,7 @@ class Queue {
     * @param {Message[]} messages        -     array of messages to send using KubeMQ.
     */
     sendBatch(messages) {
-
+        let options = this.options;
         options.method = 'POST';
         options.path = '/queue/send_batch';
 
@@ -117,7 +120,7 @@ class Queue {
      * @param {number} wait_time_seconds         -     wait time (seconds) before receiving messages from queue.
      */
     receive(max_number_of_messages, wait_time_seconds) {
-
+        let options = this.options;
         options.method = 'POST';
         options.path = '/queue/receive';
 
@@ -144,7 +147,7 @@ class Queue {
     * @param {number} wait_time_seconds         -     wait time (seconds) before receiving messages from queue.
     */
     peek(max_number_of_messages, wait_time_seconds) {
-
+        let options = this.options;
         options.method = 'POST';
         options.path = '/queue/receive';
 
@@ -171,7 +174,7 @@ class Queue {
     * Purge all messages from queue.
     */
     ackAllMessages() {
-
+        let options = this.options;
         options.method = 'POST';
         options.path = '/queue/ack_all';
         let request = {
@@ -192,7 +195,7 @@ class Queue {
     * send ping to KubeMQ to check connection
     */
     ping() {
-
+        let options = this.options;
         options.method = 'GET';
         options.path = '/ping';
 

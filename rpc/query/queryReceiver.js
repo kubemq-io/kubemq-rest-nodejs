@@ -21,7 +21,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. */
 
 const rpc = require('../rpc');
-const QueryResponse = require('../lowLevel/queryResponse')
+const QueryResponse = require('../lowLevel/queryResponse');
 
   /** Class representing a query receiver pattern subscriber. */
 class QueryReceiver{
@@ -37,7 +37,7 @@ class QueryReceiver{
    
     constructor(kubeMQHost, kubeMQGrpcPort, client, channel, group, isSecure)
     {
-        this.rpc = new rpc(kubeMQHost, kubeMQGrpcPort, client, channel, rpc.Type.Query,1000,group,isSecure)
+        this.rpc = new rpc(kubeMQHost, kubeMQGrpcPort, client, channel, rpc.Type.Query,1000,group,isSecure);
     }
     
     /**
@@ -60,7 +60,7 @@ class QueryReceiver{
      * @param {error_handler} error_handler - Callback for incoming errors.
      */
     subscribe(req_handler, error_handler) {
-        this.rpc.subscribe(req_handler, req_handler);
+        this.rpc.subscribe(req_handler, error_handler);
     }
 
     /**

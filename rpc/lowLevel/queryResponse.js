@@ -49,6 +49,7 @@ class QueryResponse{
         this.Tags          =  undefined;       
         //Represent the query result body.
         this.Body          =  Body;
+        //Represent General data of the request.
         this.Metadata      = request.Metadata;
 
         }

@@ -21,20 +21,21 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. */
 
 
-
-const kubeMQ = require('..')
+const Event = require('../pubSub/lowLevel/event');
+const EventPublisher = require('../pubSub/events/publisher');
+const Converter = require('../tools/stringToByte');
 
 let kubeMQHost = 'localhost', kubeMQRestPort = '9090',
     channelName = 'testing_event_channel', clientID = 'pub';
     
-let publisher = new kubeMQ.EventPublisher(kubeMQHost, kubeMQRestPort, clientID, channelName);
+let publisher = new EventPublisher(kubeMQHost, kubeMQRestPort, clientID, channelName);
 
-let event = new kubeMQ.Event(kubeMQ.stringToByte('hello kubemq - sending single event'));
+let event = new Event(Converter.stringToByte('hello kubemq - sending single event'));
 
 publisher.send(event).then(
     res => {
         console.log(res);
     }).catch(
         err => {
-            console.log('error sending' + err)
+            console.log('error sending' + err);
         });

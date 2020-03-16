@@ -1,14 +1,13 @@
-// const MessageQueue = require('../queue/queue');
-// const msgQueue = require('../queue/message');
-// const byteConverter = require('../tools/stringToByte').stringToByte;
+const Queue = require('../queue/queue');
+const QueueMessage = require('../queue/message');
+const Converter = require('../tools/stringToByte');
 
-const kubeMQ = require('..')
 
-let message_queue = new kubeMQ.Queue('localhost', '9090', 'client', 'testQueue', undefined, 10, 10000);
+let message_queue = new Queue('localhost', '9090', 'client', 'testQueue', undefined, 10, 10000);
 
 let messages = [
-    new kubeMQ.QueueMessage('meta', kubeMQ.stringToByte('ms1')),
-    new kubeMQ.QueueMessage('meta2', kubeMQ.stringToByte('body2'))
+    new QueueMessage('meta', Converter.stringToByte('ms1')),
+    new QueueMessage('meta2', Converter.stringToByte('body2'))
 ];
 
 //1. purge the queue

@@ -23,14 +23,16 @@ SOFTWARE. */
 
 const httpExec = require('../rest/httpExecuter');
 const stream = require('../rest/stream');
-const Event = require('../pubSub/lowLevel/event')
+const Event = require('../pubSub/lowLevel/event');
 
 
 let wsStream;
 let wsReceive;
 class PubSub {
     constructor(kubeMQHost, kubeMQRestPort, client, channelName,  useStorage, group, isSecure) {
-
+        if (kubeMQRestPort === undefined || kubeMQRestPort === null){
+            throw new Error('Please fill kubeMQRestPort');
+        }
         this.kubeMQHost = kubeMQHost;
         this.kubeMQPort = isNaN(kubeMQRestPort) ? kubeMQPort.toString() : kubeMQRestPort;
         this.channelName = channelName;

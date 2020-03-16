@@ -1,7 +1,6 @@
 const EventEmitter = require('events');
 const WebSocket = require('ws');
 
-let ws = undefined;
 const StreamRequestType = {
     'StreamRequestTypeUnknown': 0,
     'ReceiveMessage': 1,
@@ -24,12 +23,17 @@ let socketOpening = false;
  */
 class transaction extends EventEmitter {
     constructor(kubeMQHost, kubeMQRestPort, client, queueName, isSecure) {
+        if (kubeMQRestPort === undefined || kubeMQRestPort === null){
+            throw new Error('Please fill kubeMQRestPort');
+        }
+        
         super();
         this.kubeMQHost = kubeMQHost;
         this.kubeMQRestPort = isNaN(kubeMQRestPort) ? kubeMQPort.toString() : kubeMQRestPort;
         this.client = client;
         this.queueName = queueName;
         this.isSecure;
+        this.ws = null;
         let url = isSecure ? 'wss://' : 'ws://';
         url = url.concat(this.kubeMQHost.concat(':', this.kubeMQRestPort));
         url = url.concat('/queue/stream');
@@ -74,10 +78,12 @@ class transaction extends EventEmitter {
 
         let json = JSON.stringify(StreamQueueMessageRequest);
         
-        ws = new WebSocket(this.url, options);
+
+        this.ws = new WebSocket(this.url, options);
 
         let self = this;
-        ws.on('message', function incoming(data) {
+
+        self.ws.on('message', function incoming(data) {
             let msg = JSON.parse(data);
             if (msg.IsError) {
                 self.TranMessage = undefined;
@@ -117,22 +123,22 @@ class transaction extends EventEmitter {
             }
         });
 
-        ws.on('open', function open() {
+        self.ws.on('open', function open() {
             socketOpen = true;
             socketOpening = false;
-            ws.send(json, err => {
+            self.ws.send(json, err => {
                 if (err !== undefined) {
                     self.emit('error', err);
                 }
             });
         });
-        ws.on('close', code => {
+        self.ws.on('close', code => {
             self.TranMessage = undefined;
             socketOpen = false;
             socketOpening = false;
             self.emit('end', { by: 'socket close' })
         });
-        ws.on('error', err => {
+        self.ws.on('error', err => {
             self.emit('error', err);
         });
 
@@ -161,7 +167,7 @@ class transaction extends EventEmitter {
 
         let json = JSON.stringify(StreamQueueMessageRequest);
         let self = this;
-        ws.send(json, err => {
+        self.ws.send(json, err => {
             if (err !== undefined) {
                 self.emit('error', err);
             }
@@ -188,7 +194,7 @@ class transaction extends EventEmitter {
 
         let json = JSON.stringify(StreamQueueMessageRequest);
         let self = this;
-        ws.send(json, err => {
+        self.ws.send(json, err => {
             if (err !== undefined) {
                 self.emit('error', err);
             }
@@ -216,7 +222,7 @@ class transaction extends EventEmitter {
         let json = JSON.stringify(StreamQueueMessageRequest);
 
         let self = this;
-        ws.send(json, err => {
+        self.ws.send(json, err => {
             if (err !== undefined) {
                 self.emit('error', err);
             }
@@ -243,7 +249,7 @@ class transaction extends EventEmitter {
 
         let json = JSON.stringify(StreamQueueMessageRequest);     
         let self = this;
-        ws.send(json, err => {
+        self.ws.send(json, err => {
             if (err !== undefined) {
                 self.emit('error', err);
             }
@@ -276,7 +282,7 @@ class transaction extends EventEmitter {
 
         let json = JSON.stringify(StreamQueueMessageRequest);
         let self = this;
-        ws.send(json, err => {
+        self.ws.send(json, err => {
             if (err !== undefined) {
                 self.emit('error', err);
             }

@@ -22,8 +22,6 @@ SOFTWARE. */
 
 const stream = require('../rest/stream');
 const httpExec = require('../rest/httpExecuter');
-let ws;
-let options;
 
 class rpc {
 /**
@@ -37,6 +35,9 @@ class rpc {
 * @param {boolean} isSecure - Using TLS secure KubeMQ.
 */
 constructor(kubeMQHost, kubeMQRestPort, client, channelName, type, defaultTimeout, group, isSecure) {
+        if (kubeMQRestPort === undefined || kubeMQRestPort === null){
+            throw new Error('Please fill kubeMQRestPort');
+        }
 
         this.kubeMQHost = kubeMQHost;
         this.kubeMQPort = isNaN(kubeMQRestPort)? kubeMQPort.toString() : kubeMQRestPort ;
@@ -46,8 +47,8 @@ constructor(kubeMQHost, kubeMQRestPort, client, channelName, type, defaultTimeou
         this.type = type;    
         this.isSecure = isSecure;
         this.group = group;
-      
-        options = {
+        this.ws = null;
+        this.options = {
             'host': this.kubeMQHost,
             'port': this.kubeMQPort,
             "headers": { 'Content-Type': 'application/json' }
@@ -67,7 +68,7 @@ constructor(kubeMQHost, kubeMQRestPort, client, channelName, type, defaultTimeou
         if (request.Timeout === undefined) {
             request.Timeout = this.defaultTimeout;
         }
-
+        let options = this.options;
         options.method = 'POST';
 
         options.path = '/send/request';
@@ -82,13 +83,6 @@ constructor(kubeMQHost, kubeMQRestPort, client, channelName, type, defaultTimeou
         }
 
     }
-
-    /**
-     * Callback for incoming Query.
-     *
-     * @callback req_handler
-     * @param {string} msg - receive data.
-     */
 
     /**
      * Subscribe to streaming responses.
@@ -114,20 +108,21 @@ constructor(kubeMQHost, kubeMQRestPort, client, channelName, type, defaultTimeou
             url = url.concat('&subscribe_type='+'queries')
         }
 
-         ws = new stream(url, options);
-        ws.openStream();
-        ws.on('message', function incoming(data) {
+        this.ws = new stream(url, options);
+        this.ws.openStream();
+        this.ws.on('message', function incoming(data) {
             responder(data);
         });
         return new Promise((resolve, reject) => {
-            ws.on('open', function open() {
+            this.ws.on('open', function open() {
                 console.log('responder open');
                 return resolve('socket open');
             });
 
-            ws.on('error', err => {
+            this.ws.on('error', err => {
                 if(errorHandler){
-                errorHandler(err);}
+                    errorHandler(err);
+                }
                 return reject(err);
             });
         });
@@ -137,8 +132,8 @@ constructor(kubeMQHost, kubeMQRestPort, client, channelName, type, defaultTimeou
      * Unsubscribe from streaming requests.
      */
     unsubscribe(){
-        if( ws != undefined){
-            ws.stopStream();
+        if(this.ws != undefined){
+            this.ws.stopStream();
         }
     }
 

@@ -21,15 +21,17 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. */
 
 
-const kubeMQ = require('..')
+const Queue = require('../queue/queue');
+const QueueMessage = require('../queue/message');
+const Converter = require('../tools/stringToByte');
 
 let kubeMQHost = 'localhost', kubeMQRestPort = '9090'
 queueName = 'hello-world-queue', clientID = 'test-queue-client-id2';
 
-let queue = new kubeMQ.Queue(kubeMQHost, kubeMQRestPort, clientID, queueName);
+let queue = new Queue(kubeMQHost, kubeMQRestPort, clientID, queueName);
 
 queue.send(
-    new kubeMQ.QueueMessage(kubeMQ.ByteConverter('some-simple_queue-queue-message')))
+    new QueueMessage(Converter.stringToByte('some-simple_queue-queue-message')))
     .then(sent => {
         if (sent.is_error) {
             console.log('message enqueue error, error:' + err);

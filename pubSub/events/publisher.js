@@ -20,7 +20,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. */
 
-const PubSub = require('../pubSub')
+const PubSub = require('../pubSub');
 /** Class representing an event pattern publisher. */
 class Publisher {
     /**
@@ -32,7 +32,7 @@ class Publisher {
     * @param {boolean} isSecure - Using TLS secure KubeMQ.
     */
     constructor(kubeMQHost, kubeMQRestPort, client, channelName,isSecure) {
-        this.PubSub = new PubSub(kubeMQHost, kubeMQRestPort, client, channelName,false,undefined,isSecure)
+        this.PubSub = new PubSub(kubeMQHost, kubeMQRestPort, client, channelName,false,undefined,isSecure);
     }
     
     /**

@@ -11,25 +11,27 @@ class stream extends EventEmitter {
         this.socket = undefined;
     }
     openStream() {
-        if (this.socket !== undefined) {
-            return reject('there is already a stream, please close it first.' + wsStream);
-        };
+        return new Promise((_, reject) => {
+            if (this.socket !== undefined) {
+                return reject('there is already a stream, please close it first.' + this.socket);
+            };
 
-        this.socket = new WebSocket(this.address, this.options);
-        let self = this;
-        this.socket.on('open', (_ => {
-            self.emit('open');
-        }));
-        this.socket.on('close',
-            (code,number,reason) => {
-                self.emit('close',code,number,reason);
+            this.socket = new WebSocket(this.address, this.options);
+            let self = this;
+            this.socket.on('open', (_ => {
+                self.emit('open');
+            }));
+            this.socket.on('close',
+                (code,number,reason) => {
+                    self.emit('close',code,number,reason);
+                });
+            this.socket.on('error', err => {
+                self.emit('error', err);
             });
-        this.socket.on('error', err => {
-            self.emit('error', err);
-        });
 
-        this.socket.on('message', msg =>
-            self.emit('message', JSON.parse(msg)));
+            this.socket.on('message', msg =>
+                self.emit('message', JSON.parse(msg)));
+        })
     };
 
     stream(event) {

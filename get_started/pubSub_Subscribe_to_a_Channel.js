@@ -20,18 +20,18 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. */
 
-
-const kubeMQ = require('..')
+const EventSubscriber = require('../pubSub/events/subscriber');
+const Converter = require('../tools/stringToByte');
 
 let kubeMQHost = 'localhost', kubeMQRestPort = '9090';
 channelName = 'testing_event_channel', clientID = 'hello-world-pub';
 
-let subscriber = new kubeMQ.EventSubscriber(kubeMQHost, kubeMQRestPort, clientID, channelName);
+let subscriber = new EventSubscriber(kubeMQHost, kubeMQRestPort, clientID, channelName);
 
 subscriber.subscribeToEvents(msg => {
-    console.log('Event Received: EventID:' + msg.EventID + ', Channel:' + msg.Channel + ' ,Metadata:' + msg.Metadata + ', Body:' + kubeMQ.byteToString(msg.Body));
+    console.log('Event Received: EventID:' + msg.EventID + ', Channel:' + msg.Channel + ' ,Metadata:' + msg.Metadata + ', Body:' + Converter.byteToString(msg.Body));
 }
     , err => {
-        console.log('error:' + err)
+        console.log('error:' + err);
     });
 

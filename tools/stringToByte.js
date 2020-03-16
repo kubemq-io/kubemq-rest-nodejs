@@ -20,7 +20,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. */
 
-module.exports.stringToBytefd = function(body){
+module.exports.stringToByte = function(body){
     let bytes                 =	  [];
 
       for(let i = 0; i < body.length; i++) {
@@ -35,9 +35,9 @@ module.exports.stringToBytefd = function(body){
 
 
 module.exports.stringToByte = function(body){
-    return Array.prototype.slice.call(Buffer.from(body), 0)  
+    return Array.prototype.slice.call(Buffer.from(body), 0);  
   
 }
 module.exports.byteToString= function(body){
-    return Buffer.from(body, 'base64')
+    return Buffer.from(body, 'base64');
  }

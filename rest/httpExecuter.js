@@ -1,12 +1,11 @@
-const http = require('http'),
-    https = require('https'),
-    fs = require('fs');
+const http = require('http');
+const https = require('https');
 
 exports.getRequest = ((requestBody, options) => {
 
 
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve, _) => {
        
         let request = http.request(options, function (res) {
             let chunks = [];
@@ -32,7 +31,7 @@ exports.getHttpsRequest = ((requestBody, options) => {
 
 
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve, _) => {
 
        
         options.rejectUnauthorized = false;

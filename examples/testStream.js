@@ -19,11 +19,9 @@ let eventEmmiter = new events.EventEmitter();
 
 
 send.streamEvent(eventEmmiter)
-console.log('test')
 for (let i = 1; i < 5; i++) {
-  let event= new lowLevelEvent(bytes);
+  let event = new lowLevelEvent(bytes);
   event.Channel = channelName;
-  event.ClientID ="MyID";
-  eventEmmiter.emit('message',event)
-  
+  event.ClientID = i.toString();
+  eventEmmiter.emit('message',event);
 }

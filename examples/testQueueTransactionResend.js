@@ -1,10 +1,9 @@
-const kubeMQ = require('..')
-
+const QueueTransaction = require('../queue/transaction');
 
 let kubeMQHost = 'localhost', kubeMQRestPort = '9090',
     clientID = 'c1', queueName = 'testQueue';
 
-    let transactionQueue= new kubeMQ.QueueTransaction(kubeMQHost, kubeMQRestPort, clientID, queueName);
+    let transactionQueue= new QueueTransaction(kubeMQHost, kubeMQRestPort, clientID, queueName);
  
 transactionQueue.receiveMessage(5, 10);
 
@@ -28,7 +27,7 @@ transactionQueue.addListener('extended', ack => {
 transactionQueue.on('message', msg => {
   console.log(msg);
   if (msg.IsError) {
-    console.log('error' + msg);
+      console.log('error' + msg);
     return;
   }
  
