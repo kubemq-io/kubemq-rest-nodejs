@@ -37,7 +37,7 @@ class stream extends EventEmitter {
     stream(event) {
 
         return new Promise((resolve, reject) => {
-            if (this.socket.readyState !== this.socket.OPEN) {
+            if (this.socket.readyState !== WebSocket.OPEN) {
                 return reject('socket is not ready' + this.socket.readyState);
             }
             this.socket.send(JSON.stringify(event), err => {
