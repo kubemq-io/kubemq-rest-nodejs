@@ -48,15 +48,15 @@ class Publisher {
     * @param {EventEmitter} event_emitter - Emits on('message'}.
     */
     openStream() {
-       return PubSub.openStream();
+       return this.PubSub.openStream();
     }
     
     stream(event){
-        return PubSub.stream(event);
+        return this.PubSub.stream(event);
     }
 
     closeStream(){
-        return PubSub.closeStream();
+        return this.PubSub.closeStream();
     }
 
 }

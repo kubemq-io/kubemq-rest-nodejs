@@ -11,8 +11,6 @@ const StreamRequestType = {
     'SendModifiedMessage': 6
 }
 
-let socketOpen = false;
-let socketOpening = false;
 
 /**
  * @param {string} kubeMQHost - The KubeMQ address.
@@ -26,8 +24,10 @@ class transaction extends EventEmitter {
         if (kubeMQRestPort === undefined || kubeMQRestPort === null){
             throw new Error('Please fill kubeMQRestPort');
         }
-        
+
         super();
+        this.socketOpen = false;
+        this.socketOpening = false;
         this.kubeMQHost = kubeMQHost;
         this.kubeMQRestPort = isNaN(kubeMQRestPort) ? kubeMQPort.toString() : kubeMQRestPort;
         this.client = client;
@@ -48,7 +48,7 @@ class transaction extends EventEmitter {
     }
 
     transactionReady(){
-        if (this.TranMessage !== undefined || socketOpen === true || socketOpening === true) {
+        if (this.TranMessage !== undefined || this.socketOpen === true || this.socketOpening === true) {
            return false;
         }else{
             return true;
@@ -56,11 +56,11 @@ class transaction extends EventEmitter {
     };
     
     receiveMessage(visibilitySeconds, waitTimeSeconds) {
-        if (this.TranMessage !== undefined || socketOpen === true || socketOpening === true) {
+        if (this.TranMessage !== undefined || this.socketOpen === true || this.socketOpening === true) {
             this.emit('error', { Error: 'there is still a transaction open' });
             return;
         }
-        socketOpening = true;
+        this.socketOpening = true;
         let options = {        
             rejectUnauthorized: false
         };
@@ -124,8 +124,8 @@ class transaction extends EventEmitter {
         });
 
         self.ws.on('open', function open() {
-            socketOpen = true;
-            socketOpening = false;
+            self.socketOpen = true;
+            self.socketOpening = false;
             self.ws.send(json, err => {
                 if (err !== undefined) {
                     self.emit('error', err);
@@ -134,8 +134,8 @@ class transaction extends EventEmitter {
         });
         self.ws.on('close', code => {
             self.TranMessage = undefined;
-            socketOpen = false;
-            socketOpening = false;
+            self.socketOpen = false;
+            self.socketOpening = false;
             self.emit('end', { by: 'socket close' })
         });
         self.ws.on('error', err => {
@@ -148,7 +148,7 @@ class transaction extends EventEmitter {
 
     ackMessage() {
 
-        if ( this.TranMessage === undefined || socketOpen === false) {
+        if ( this.TranMessage === undefined || this.socketOpen === false) {
             this.emit('error', { Error: 'no message in tran' });
             return;
         }
@@ -175,7 +175,7 @@ class transaction extends EventEmitter {
     };
 
     rejectedMessage() {
-        if ( this.TranMessage === undefined || socketOpen === false) {
+        if ( this.TranMessage === undefined || this.socketOpen === false) {
             this.emit('error', { Error: 'no message in tran' });
             return;
         }
@@ -202,7 +202,7 @@ class transaction extends EventEmitter {
     };
 
     extendVisibility(visibility_seconds) {
-        if ( this.TranMessage === undefined || socketOpen === false) {
+        if ( this.TranMessage === undefined || this.socketOpen === false) {
             this.emit('error', { Error: 'no message in tran' });
             return;
         }
@@ -230,7 +230,7 @@ class transaction extends EventEmitter {
     };
 
     resend(queueName) {
-        if ( this.TranMessage === undefined || socketOpen === false) {
+        if ( this.TranMessage === undefined || this.socketOpen === false) {
             this.emit('error', { Error: 'no message in tran' });
             return;
         }
@@ -258,7 +258,7 @@ class transaction extends EventEmitter {
 
 
     modify(message) {
-        if ( this.TranMessage === undefined || socketOpen === false) {
+        if ( this.TranMessage === undefined || this.socketOpen === false) {
             this.emit('error', { Error: 'no message in tran' });
             return;
         }

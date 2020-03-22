@@ -26,8 +26,6 @@ const stream = require('../rest/stream');
 const Event = require('../pubSub/lowLevel/event');
 
 
-let wsStream;
-let wsReceive;
 class PubSub {
     constructor(kubeMQHost, kubeMQRestPort, client, channelName,  useStorage, group, isSecure) {
         if (kubeMQRestPort === undefined || kubeMQRestPort === null){
@@ -40,6 +38,8 @@ class PubSub {
         this.store = useStorage;
         this.isSecure = isSecure;
         this.group = group;
+        this.wsStream;
+        this.wsReceive;
     }
 
     send(event) {
@@ -96,29 +96,29 @@ class PubSub {
             url = url.concat('&events_store_type_data=' + storeProperties.Type);
             url = url.concat('&events_store_type_value=' + storeProperties.Value);
         }
-
-        wsStream = new stream(url, options);
-        wsStream.openStream();
-        return wsStream;
+        
+        this.wsStream = new stream(url, options);
+        this.wsStream.openStream();
+        return this.wsStream;
     }
 
     stream(event) {
         event.Channel = this.channelName;
         event.ClientId = this.client;
         event.store = this.store;
-        return wsStream.stream(event);
+        return this.wsStream.stream(event);
     }
 
 
     closeStream() {
-        if (wsStream !== undefined) {
-            wsStream.stopStream();
+        if (this.wsStream !== undefined) {
+            this.wsStream.stopStream();
         }
     }
 
 
     subscribe(subscriberToEvents, errorHandler, storeProperties) {
-        if (wsReceive === undefined) {
+        if (this.wsReceive === undefined) {
 
             let options = { rejectUnauthorized: false };
            
@@ -140,22 +140,22 @@ class PubSub {
                 url = url.concat('&events_store_type_data=' + storeProperties.Type);
                 url = url.concat('&events_store_type_value=' + storeProperties.Value);
             }
-            wsReceive = new stream(url, options);
-            wsReceive.openStream();
+            this.wsReceive = new stream(url, options);
+            this.wsReceive.openStream();
         };
-        wsReceive.on('message', function incoming(data) {
+        this.wsReceive.on('message', function incoming(data) {
             subscriberToEvents(data);
         });
-        wsReceive.on('close', function incoming(code,number,reason) {
+        this.wsReceive.on('close', function incoming(code,number,reason) {
             errorHandler('closed socket on code:' + code + ', number:'+ number +', reason:'+reason);
         });
         return new Promise((resolve, reject) => {
-            wsReceive.on('open', function open() {
+            this.wsReceive.on('open', function open() {
                 console.log('subscriber open');
                 return resolve('socket open');
             });
 
-            wsReceive.on('error', err => {
+            this.wsReceive.on('error', err => {
                 if (errorHandler) {
                     errorHandler(err);
                 }
@@ -166,8 +166,8 @@ class PubSub {
     }
 
     unsubscribe() {
-        if (wsReceive !== undefined) {
-            wsReceive.stopStream();
+        if (this.wsReceive !== undefined) {
+            this.wsReceive.stopStream();
         }
     }
 };
