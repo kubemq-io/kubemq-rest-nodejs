@@ -13,7 +13,7 @@ let query = new QueryReceiver(kubeMQHost, kubeMQRestPort, clientID, channelName)
         let response = new QueryResponse(qry, Converter.stringToByte('no books'));
         response.Metadata = 'no books';
         query.sendResponse(response).then(snd => {
-            console.log('sent:' +snd);
+            console.log('sent:' + snd);
         }).catch(cht => console.log(cht));
 
         }, err => {

@@ -16,4 +16,4 @@ sender.send(request).then(
     }).catch(
         err => {
             console.log('command error: ' + err);
-        });
+});

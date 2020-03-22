@@ -1,7 +1,7 @@
 const QueueTransaction = require('../queue/transaction');
 
 let kubeMQHost = 'localhost', kubeMQRestPort = '9090',
-    clientID = 'c1', queueName = 'testQueue';
+    clientID = 'c2', queueName = 'testQueue';
 let transactionQueue = new QueueTransaction(kubeMQHost, kubeMQRestPort, clientID, queueName);
 
 transactionQueue.receiveMessage(5, 10);
@@ -11,7 +11,7 @@ transactionQueue.on('error', err => {
   if (err.IsError) {
     console.log('Error ' + err.Error);
   } else {
-    console.log('Error ' + err.message);
+    console.log('Error ' + err.Error);
   }
 });
 

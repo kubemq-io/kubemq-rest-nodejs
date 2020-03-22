@@ -18,7 +18,6 @@ transactionQueue.on('error', err => {
 
 transactionQueue.on('end', mod => {
   console.log('end transaction by: ' + mod.by);
-  //  transaction.receiveMessage(1, 10);
 });
 transactionQueue.addListener('extended', ack => {
   console.log(ack);

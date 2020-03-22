@@ -15,7 +15,7 @@ let kubeMQHost = 'localhost', kubeMQRestPort = '9090',
 //  */
 
 
-let storePublisher = new EventStorePublisher(kubeMQHost, kubeMQRestPort, clientID+'1', channelName);
+let storePublisher = new EventStorePublisher(kubeMQHost, kubeMQRestPort, clientID + '1', channelName);
 
 let eventStore = new Event(Converter.stringToByte('test'));
 eventStore.Metadata = 'test store';

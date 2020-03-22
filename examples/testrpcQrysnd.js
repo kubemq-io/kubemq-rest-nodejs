@@ -11,7 +11,7 @@ let qrySend = new QuerySender(kubeMQHost, kubeMQRestPort, clientID, channelName,
 let request = new QueryRequest(Converter.stringToByte('select books'));
 
 qrySend.send(request).then(res => {
-     console.log('Query response: '+ Converter.byteToString(res.data.Body)) }
+     console.log('Query response: ' + Converter.byteToString(res.data.Body)) }
      ).catch(err=>{
           console.log('error query: ' + err);
      });

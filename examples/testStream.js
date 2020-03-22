@@ -1,27 +1,17 @@
+const kubeMQ = require('../kubeMQ');
 
-let kubemqAdd = "localhost:50000";
+let kubeMQHost = 'localhost', kubeMQRestPort = '9090',
+    clientID = 'c1', channelName = 'pubsubnnel';
 
-const sender          =   require('../pubSub/lowLevel/sender');
-const events          =   require('events');
-const lowLevelEvent   =   require('../pubSub/lowLevel/event')
+let publisher = new kubeMQ.EventPublisher(kubeMQHost, kubeMQRestPort, clientID, channelName);
+let event = new kubeMQ.Event(kubeMQ.stringToByte('publish event test'));
 
-let channelName	        =	  "test-event-stream";
-let send                =	  new sender(kubemqAdd);
-let bytes = [];
-
-for (let i = 0; i < "myTestStream".length; i++) {
-  let char = "TestBody".charCodeAt(i);
-  bytes.push(char >>> 8);
-  bytes.push(char & 0xFF);
-}
-
-let eventEmmiter = new events.EventEmitter();
-
-
-send.streamEvent(eventEmmiter)
-for (let i = 1; i < 5; i++) {
-  let event = new lowLevelEvent(bytes);
-  event.Channel = channelName;
-  event.ClientID = i.toString();
-  eventEmmiter.emit('message',event);
-}
+publisher.openStream();
+publisher.stream(event).then(
+    res => {
+        console.log(res);
+    }).catch(
+        err => {
+            console.log('error sending' + err)
+        });
+publisher.closeStream();

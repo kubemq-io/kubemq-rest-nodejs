@@ -30,8 +30,7 @@ let subscriber = new EventSubscriber(kubeMQHost, kubeMQRestPort, clientID, chann
 
 subscriber.subscribeToEvents(msg => {
     console.log('Event Received: EventID:' + msg.EventID + ', Channel:' + msg.Channel + ' ,Metadata:' + msg.Metadata + ', Body:' + Converter.byteToString(msg.Body));
-}
-    , err => {
+}, err => {
         console.log('error:' + err);
-    });
+});
 

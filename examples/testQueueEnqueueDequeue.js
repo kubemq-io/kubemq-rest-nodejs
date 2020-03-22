@@ -12,14 +12,14 @@ let msg = new QueueMessage(Converter.stringToByte('body'));
 //msg.addExpiration(1);
 
 queue.send(msg).then(sent => {
-    console.log('sent message:' + sent);
+    console.log('sent message:' + sent.message);
     deQueue();
 }).catch(err => {
     console.log(err);
 });
 
 function deQueue() {
-    let queueDequeue = new Queue(kubeMQHost, kubeMQRestPort, clientID+'2',queueName);
+    let queueDequeue = new Queue(kubeMQHost, kubeMQRestPort, clientID + '2',queueName);
 
     queueDequeue.receive(10, 1).then(receivedMessages => {
         console.log('received message:' + JSON.stringify(receivedMessages));

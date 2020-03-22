@@ -13,7 +13,7 @@ transactionQueue.on('error', err => {
   if (err.IsError) {
     console.log('Error ' + err.Error);
   } else {
-    console.log('Error ' + err.message);
+    console.log('Error ' + err.Error);
   }
 });
 
@@ -26,26 +26,26 @@ transactionQueue.addListener('extended', ack => {
 });
 
 transactionQueue.on('message', msg => {
-  console.log(msg);
-  if (msg.IsError) {
-    console.log('error' + msg);
-    return;
-  }
-  console.log("Need more time to process, extend visibility for more 3 seconds");
-  extendVisibility().then(res=> {
+    console.log(msg);
+    if (msg.IsError) {
+      console.log('error' + msg);
+      return;
+    }
+    console.log("Need more time to process, extend visibility for more 3 seconds");
+    extendVisibility().then(_=> {
 
-  
-  if (msg.Message.Attributes.Sequence !== 220) {
-    transactionQueue.ackMessage();
-  } else {
-    transactionQueue.rejectedMessage();
-  };
-});
+    
+    if (msg.Message.Attributes.Sequence !== 220) {
+      transactionQueue.ackMessage();
+    } else {
+      transactionQueue.rejectedMessage();
+    };
+  });
 });
 
 function extendVisibility(){
   transactionQueue.extendVisibility(3);
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve, _) => {
     transactionQueue.addListener('extended', ack => {
       console.log(ack);
       resolve();

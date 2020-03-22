@@ -38,4 +38,4 @@ publisher.send(event).then(
     }).catch(
         err => {
             console.log('error sending' + err);
-        });
+    });
